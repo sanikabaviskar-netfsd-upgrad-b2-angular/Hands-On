@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Location Logger</title>
+</head>
+<body onload="loadHistory()">
+
+    <h1>Location-Based Logger</h1>
+
+    <button onclick="getLocation()">Get My Location</button>
+
+    <h3>Current Location:</h3>
+    <div id="output"></div>
+
+    <h3>Last 5 Locations:</h3>
+    <ul id="history"></ul>
+
+    <script>
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    showPosition,
+                    showError,
+                    { timeout: 10000 }
+                );
+            } else {
+                document.getElementById("output").innerHTML =
+                    "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+
+            document.getElementById("output").innerHTML =
+                "Latitude: " + lat + "<br>Longitude: " + lon;
+
+            var locationData = {
+                latitude: lat,
+                longitude: lon,
+                time: new Date().toLocaleString()
+            };
+
+            var history = localStorage.getItem("locationHistory");
+            history = history ? JSON.parse(history) : [];
+
+            history.unshift(locationData);
+
+            if (history.length > 5) {
+                history = history.slice(0, 5);
+            }
+
+            localStorage.setItem("locationHistory", JSON.stringify(history));
+
+            loadHistory();
+        }
+
+        function showError(error) {
+            var message = "";
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    message = "Permission denied by user.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    message = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    message = "The request to get location timed out.";
+                    break;
+                default:
+                    message = "An unknown error occurred.";
+                    break;
+            }
+
+            document.getElementById("output").innerHTML = message;
+        }
+
+        function loadHistory() {
+            var historyList = document.getElementById("history");
+            historyList.innerHTML = "";
+
+            var history = localStorage.getItem("locationHistory");
+            history = history ? JSON.parse(history) : [];
+
+            for (var i = 0; i < history.length; i++) {
+                var li = document.createElement("li");
+                li.innerHTML =
+                    "Lat: " + history[i].latitude +
+                    ", Lon: " + history[i].longitude +
+                    " (" + history[i].time + ")";
+                historyList.appendChild(li);
+            }
+        }
+
+    </script>
+
+</body>
+</html>
