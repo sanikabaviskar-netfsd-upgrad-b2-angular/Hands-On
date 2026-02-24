@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Data Fetcher</title>
+</head>
+<body>
+
+<h2>Weather Report</h2>
+<div id="output">Loading...</div>
+
+<script type="module">
+
+const API_KEY = "YOUR_API_KEY";
+const CITY = "Mumbai";
+const BASE_URL = `https://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=metric`;
+
+const formatWeather = (data) => `
+City: ${data.name} <br>
+Temperature: ${data.main.temp}°C <br>
+Weather: ${data.weather[0].description} <br>
+Humidity: ${data.main.humidity}% <br>
+Wind Speed: ${data.wind.speed} m/s
+`;
+
+const displayError = (error) => {
+    document.getElementById("output").innerHTML = `Error: ${error.message}`;
+};
+const fetchWeatherWithPromise = () => {
+    fetch(BASE_URL)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch weather data");
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("output").innerHTML = formatWeather(data);
+        })
+        .catch(error => {
+            displayError(error);
+        });
+};
+const fetchWeatherAsync = async () => {
+    try {
+        const response = await fetch(BASE_URL);
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch weather data");
+        }
+
+        const data = await response.json();
+
+        document.getElementById("output").innerHTML = formatWeather(data);
+
+    } catch (error) {
+        displayError(error);
+    }
+};
+fetchWeatherAsync();
+</script>
+
+</body>
+</html>
