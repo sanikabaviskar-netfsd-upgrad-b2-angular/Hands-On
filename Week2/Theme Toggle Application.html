@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Theme Toggle</title>
+</head>
+
+<body>
+
+<h2>Theme Toggle Application</h2>
+
+<button id="toggleBtn">Toggle Theme</button>
+
+<script>
+const button = document.getElementById("toggleBtn");
+
+function applyTheme(theme){
+    if(theme === "dark"){
+        document.body.style.backgroundColor = "black";
+        document.body.style.color = "white";
+    }else{
+        document.body.style.backgroundColor = "white";
+        document.body.style.color = "black";
+    }
+}
+
+const savedTheme = localStorage.getItem("theme") || "light";
+applyTheme(savedTheme);
+
+button.addEventListener("click", function(){
+    const currentTheme = localStorage.getItem("theme") === "dark" ? "light" : "dark";
+    localStorage.setItem("theme", currentTheme);
+    applyTheme(currentTheme);
+});
+</script>
+
+</body>
+</html>
