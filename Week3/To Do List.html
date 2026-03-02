@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>To Do List</title>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+
+<h2>To-Do List</h2>
+
+<input type="text" id="taskInput" placeholder="Enter task">
+<button id="addTask">Add</button>
+
+<h3>Total Tasks: <span id="total">0</span></h3>
+<h3>Completed Tasks: <span id="completed">0</span></h3>
+
+<ul id="taskList"></ul>
+
+<script>
+$(document).ready(function(){
+
+let total=0;
+let completed=0;
+
+$("#addTask").click(function(){
+
+let task=$("#taskInput").val().trim();
+
+if(task!==""){
+$("#taskList").append(
+"<li><span class='task'>"+task+
+"</span> <button class='complete'>Complete</button> "+
+"<button class='delete'>Delete</button></li>"
+);
+
+total++;
+$("#total").text(total);
+$("#taskInput").val("");
+}
+
+});
+
+$("#taskList").on("click",".complete",function(){
+
+$(this).siblings(".task").toggleClass("done");
+
+if($(this).siblings(".task").hasClass("done")){
+completed++;
+}else{
+completed--;
+}
+
+$("#completed").text(completed);
+
+});
+
+$("#taskList").on("click",".delete",function(){
+
+if($(this).siblings(".task").hasClass("done")){
+completed--;
+}
+
+total--;
+$("#total").text(total);
+$("#completed").text(completed);
+
+$(this).parent().remove();
+
+});
+
+});
+</script>
+
+</body>
+</html>
