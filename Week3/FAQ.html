@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FAQ Toggle</title>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+
+<h2>FAQ Section</h2>
+
+<div class="faq">
+
+<div id="q1">What is jQuery?</div>
+<div class="answer">jQuery is a JavaScript library used for DOM manipulation.</div>
+
+<div id="q2">Why use jQuery?</div>
+<div class="answer">It simplifies JavaScript operations.</div>
+
+<div id="q3">What is slideToggle?</div>
+<div class="answer">It shows or hides elements with sliding effect.</div>
+
+<div id="q4">Is jQuery easy to learn?</div>
+<div class="answer">Yes, it uses simple syntax.</div>
+
+<div id="q5">Can jQuery handle events?</div>
+<div class="answer">Yes, it supports event handling methods.</div>
+
+</div>
+
+<script>
+$(document).ready(function(){
+
+$(".answer").hide();
+
+$("#q1,#q2,#q3,#q4,#q5").click(function(){
+
+$(this).next(".answer").slideToggle();
+
+$(this).toggleClass("active");
+
+});
+
+});
+</script>
+
+</body>
+</html>
