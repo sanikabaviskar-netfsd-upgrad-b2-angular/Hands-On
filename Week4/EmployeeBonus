@@ -1,0 +1,34 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write("Enter Name: ");
+        string name = Console.ReadLine();
+
+        Console.Write("Enter Salary: ");
+        double salary = Convert.ToDouble(Console.ReadLine());
+
+        Console.Write("Enter Experience (years): ");
+        int exp = Convert.ToInt32(Console.ReadLine());
+
+        double bonusPercent;
+
+        if (exp < 2)
+            bonusPercent = 0.05;
+        else if (exp <= 5)
+            bonusPercent = 0.10;
+        else
+            bonusPercent = 0.15;
+
+        double bonus = salary * bonusPercent;
+
+        // Ternary operator to calculate final salary
+        double finalSalary = bonus > 0 ? salary + bonus : salary;
+
+        Console.WriteLine("Employee: " + name);
+        Console.WriteLine("Bonus: " + bonus.ToString("F2"));
+        Console.WriteLine("Final Salary: " + finalSalary.ToString("F2"));
+    }
+}
