@@ -1,0 +1,35 @@
+using System;
+
+class Calculator
+{
+    public int Add(int a, int b)
+    {
+        return a + b;
+    }
+
+    // Method for Subtraction
+    public int Subtract(int a, int b)
+    {
+        return a - b;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Calculator calc = new Calculator();
+
+        Console.Write("Enter first number: ");
+        int a = Convert.ToInt32(Console.ReadLine());
+
+        Console.Write("Enter second number: ");
+        int b = Convert.ToInt32(Console.ReadLine());
+
+        int addition = calc.Add(a, b);
+        int subtraction = calc.Subtract(a, b);
+
+        Console.WriteLine("Addition = " + addition);
+        Console.WriteLine("Subtraction = " + subtraction);
+    }
+}
