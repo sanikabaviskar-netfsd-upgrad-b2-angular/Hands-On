@@ -1,0 +1,32 @@
+using System;
+
+class PowerCalculator
+{
+    public int CalculatePower(int baseNum, int exponent)
+    {
+    
+        if (exponent == 0)
+            return 1;
+        return baseNum * CalculatePower(baseNum, exponent - 1);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        PowerCalculator pc = new PowerCalculator();
+
+        Console.Write("Enter base number: ");
+        int baseNum = Convert.ToInt32(Console.ReadLine());
+
+        Console.Write("Enter exponent: ");
+        int exponent = Convert.ToInt32(Console.ReadLine());
+
+        int result = pc.CalculatePower(baseNum, exponent);
+
+        Console.WriteLine("Base = " + baseNum);
+        Console.WriteLine("Exponent = " + exponent);
+        Console.WriteLine("Result = " + result);
+    }
+}
