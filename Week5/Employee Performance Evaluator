@@ -1,0 +1,50 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            Console.Write("Enter Employee Name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Enter Monthly Sales Amount: ");
+            decimal sales = Convert.ToDecimal(Console.ReadLine());
+
+            Console.Write("Enter Customer Feedback Rating (1-5): ");
+            int rating = Convert.ToInt32(Console.ReadLine());
+
+            // Get tuple values from method
+            var performanceData = GetEmployeeData(sales, rating);
+
+            // Pattern matching to determine performance category
+            string category = performanceData switch
+            {
+                (>= 100000m, >= 4) => "High Performer",
+                (>= 50000m, >= 3) => "Average Performer",
+                _ => "Needs Improvement"
+            };
+
+            Console.WriteLine("\n------ Employee Performance Report ------");
+            Console.WriteLine("Employee Name : " + name);
+            Console.WriteLine("Sales Amount  : " + performanceData.Item1);
+            Console.WriteLine("Rating        : " + performanceData.Item2);
+            Console.WriteLine("Performance   : " + category);
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid input! Please enter numeric values for sales and rating.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+
+    // Method returning tuple
+    static (decimal, int) GetEmployeeData(decimal sales, int rating)
+    {
+        return (sales, rating);
+    }
+}
