@@ -1,0 +1,42 @@
+using System;
+using System.Diagnostics;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Trace.Listeners.Add(new TextWriterTraceListener("orderlog.txt"));
+        Trace.AutoFlush = true;
+
+        Trace.TraceInformation("Order processing started");
+
+        ValidateOrder();
+        ProcessPayment();
+        UpdateInventory();
+        GenerateInvoice();
+
+        Trace.TraceInformation("Order processing completed");
+
+        Console.WriteLine("Order processing finished. Check log file.");
+    }
+
+    static void ValidateOrder()
+    {
+        Trace.WriteLine("Validating order");
+    }
+
+    static void ProcessPayment()
+    {
+        Trace.WriteLine("Processing payment");
+    }
+
+    static void UpdateInventory()
+    {
+        Trace.WriteLine("Updating inventory");
+    }
+
+    static void GenerateInvoice()
+    {
+        Trace.WriteLine("Generating invoice");
+    }
+}
