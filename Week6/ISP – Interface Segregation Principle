@@ -1,0 +1,115 @@
+namespace ISP_Printer_System
+{
+    public interface IPrinter
+    {
+        void Print(string document);
+    }
+}
+.......................................................................................................
+
+namespace ISP_Printer_System
+{
+    public interface IScanner
+    {
+        void Scan(string document);
+    }
+}
+
+...............................................................................................................
+
+namespace ISP_Printer_System
+{
+    public interface IFax
+    {
+        void Fax(string document);
+    }
+}
+
+..................................................................................................................
+
+using System;
+
+namespace ISP_Printer_System
+{
+    public class BasicPrinter : IPrinter
+    {
+        public void Print(string document)
+        {
+            Console.WriteLine("Printing: " + document);
+        }
+    }
+}
+
+.....................................................................................................
+
+using System;
+
+namespace ISP_Printer_System
+{
+    public class AdvancedPrinter : IPrinter, IScanner, IFax
+    {
+        public void Print(string document)
+        {
+            Console.WriteLine("Printing: " + document);
+        }
+
+        public void Scan(string document)
+        {
+            Console.WriteLine("Scanning: " + document);
+        }
+
+        public void Fax(string document)
+        {
+            Console.WriteLine("Faxing: " + document);
+        }
+    }
+}
+
+........................................................................................
+
+using System;
+
+namespace ISP_Printer_System
+{
+    public class AdvancedPrinter : IPrinter, IScanner, IFax
+    {
+        public void Print(string document)
+        {
+            Console.WriteLine("Printing: " + document);
+        }
+
+        public void Scan(string document)
+        {
+            Console.WriteLine("Scanning: " + document);
+        }
+
+        public void Fax(string document)
+        {
+            Console.WriteLine("Faxing: " + document);
+        }
+    }
+}
+............................................................................................................
+
+using System;
+
+namespace ISP_Printer_System
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            BasicPrinter basic = new BasicPrinter();
+            basic.Print("Report.pdf");
+
+            Console.WriteLine();
+
+            AdvancedPrinter advanced = new AdvancedPrinter();
+            advanced.Print("Invoice.pdf");
+            advanced.Scan("Invoice.pdf");
+            advanced.Fax("Invoice.pdf");
+
+            Console.ReadLine();
+        }
+    }
+}
