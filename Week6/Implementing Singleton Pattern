@@ -1,0 +1,63 @@
+using System;
+
+namespace Singleton_Config_Manager
+{
+    public class ConfigurationManager
+    {
+
+        private static ConfigurationManager instance;
+
+        private ConfigurationManager()
+        {
+            ApplicationName = "Inventory System";
+            Version = "1.0.0";
+            DatabaseConnectionString = "Server=localhost;Database=InventoryDB;";
+        }
+
+        public static ConfigurationManager GetInstance()
+        {
+            if (instance == null)
+            {
+                instance = new ConfigurationManager();
+            }
+            return instance;
+        }
+
+        public string ApplicationName { get; set; }
+        public string Version { get; set; }
+        public string DatabaseConnectionString { get; set; }
+    }
+}
+
+..............................................................................................................................
+
+using System;
+
+namespace Singleton_Config_Manager
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            ConfigurationManager config1 = ConfigurationManager.GetInstance();
+            ConfigurationManager config2 = ConfigurationManager.GetInstance();
+
+            Console.WriteLine("First Call:");
+            Console.WriteLine(config1.ApplicationName);
+            Console.WriteLine(config1.Version);
+            Console.WriteLine(config1.DatabaseConnectionString);
+
+            Console.WriteLine("\nSecond Call:");
+            Console.WriteLine(config2.ApplicationName);
+            Console.WriteLine(config2.Version);
+            Console.WriteLine(config2.DatabaseConnectionString);
+
+            if (config1 == config2)
+            {
+                Console.WriteLine("\nSame instance confirmed.");
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
