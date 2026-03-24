@@ -1,0 +1,106 @@
+namespace Repository_Student_System
+{
+    public class Student
+    {
+        public int StudentId { get; set; }
+        public string StudentName { get; set; } = "";
+        public string Course { get; set; } = "";
+    }
+}
+
+..............................................................................................
+
+using System.Collections.Generic;
+
+namespace Repository_Student_System
+{
+    public interface IStudentRepository
+    {
+        void AddStudent(Student student);
+        List<Student> GetAllStudents();
+        Student GetStudentById(int id);
+        void DeleteStudent(int id);
+    }
+}
+..................................................................................................
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Repository_Student_System
+{
+    public class StudentRepository : IStudentRepository
+    {
+        private List<Student> students = new List<Student>();
+
+        public void AddStudent(Student student)
+        {
+            students.Add(student);
+        }
+
+        public List<Student> GetAllStudents()
+        {
+            return students;
+        }
+
+        public Student GetStudentById(int id)
+        {
+            return students.FirstOrDefault(s => s.StudentId == id);
+        }
+
+        public void DeleteStudent(int id)
+        {
+            Student student = GetStudentById(id);
+            if (student != null)
+            {
+                students.Remove(student);
+            }
+        }
+    }
+}
+............................................................................................................................
+
+using System;
+using System.Collections.Generic;
+
+namespace Repository_Student_System
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IStudentRepository repo = new StudentRepository();
+
+         
+            repo.AddStudent(new Student { StudentId = 1, StudentName = "Amit", Course = "Java" });
+            repo.AddStudent(new Student { StudentId = 2, StudentName = "Riya", Course = "C#" });
+
+     
+            Console.WriteLine("All Students:");
+            List<Student> students = repo.GetAllStudents();
+            foreach (var s in students)
+            {
+                Console.WriteLine($"{s.StudentId} - {s.StudentName} - {s.Course}");
+            }
+
+       
+            Console.WriteLine("\nFind Student with ID 1:");
+            Student found = repo.GetStudentById(1);
+            if (found != null)
+            {
+                Console.WriteLine(found.StudentName + " enrolled in " + found.Course);
+            }
+
+    
+            repo.DeleteStudent(1);
+
+            Console.WriteLine("\nAfter Deletion:");
+            foreach (var s in repo.GetAllStudents())
+            {
+                Console.WriteLine($"{s.StudentId} - {s.StudentName} - {s.Course}");
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
