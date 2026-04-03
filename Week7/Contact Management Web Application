@@ -1,0 +1,210 @@
+namespace StudentApp.Models
+{
+    public class ContactInfo
+    {
+        public int ContactId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string CompanyName { get; set; }
+        public string EmailId { get; set; }
+        public long MobileNo { get; set; }
+        public string Designation { get; set; }
+    }
+}
+
+..................................................................................................................................................
+
+
+using StudentApp.Models;
+
+namespace StudentApp.Services
+{
+    public interface IContactService
+    {
+        List<ContactInfo> GetAllContacts();
+        ContactInfo GetContactById(int id);
+        void AddContact(ContactInfo contact);
+    }
+}
+
+.........................................................................................................................................................
+
+using StudentApp.Models;
+
+namespace StudentApp.Services
+{
+    public class ContactService : IContactService
+    {
+        // Static list (allowed here ✅)
+        private static List<ContactInfo> contacts = new List<ContactInfo>();
+
+        public void AddContact(ContactInfo contact)
+        {
+            contacts.Add(contact);
+        }
+
+        public List<ContactInfo> GetAllContacts()
+        {
+            return contacts;
+        }
+
+        public ContactInfo GetContactById(int id)
+        {
+            return contacts.FirstOrDefault(c => c.ContactId == id);
+        }
+    }
+}
+
+.............................................................................................................................................
+
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+
+// DI Registration
+builder.Services.AddSingleton<IContactService, ContactService>();
+
+var app = builder.Build();
+
+app.UseRouting();
+app.UseStaticFiles();
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Contact}/{action=ShowContacts}/{id?}");
+
+app.Run();
+
+
+...............................................................................................................................................
+
+
+using Microsoft.AspNetCore.Mvc;
+using StudentApp.Models;
+using StudentApp.Services;
+
+namespace StudentApp.Controllers
+{
+    public class ContactController : Controller
+    {
+        private readonly IContactService _contactService;
+
+        // Constructor Injection
+        public ContactController(IContactService contactService)
+        {
+            _contactService = contactService;
+        }
+
+        // Show All Contacts
+        [HttpGet]
+        [Route("contact/list")]
+        public IActionResult ShowContacts()
+        {
+            var contacts = _contactService.GetAllContacts();
+            return View(contacts);
+        }
+
+        // Get Contact By Id
+        [HttpGet]
+        [Route("contact/details/{id}")]
+        public IActionResult GetContactById(int id)
+        {
+            var contact = _contactService.GetContactById(id);
+            return View(contact);
+        }
+
+        // GET: Add Contact Form
+        [HttpGet]
+        [Route("contact/add")]
+        public IActionResult AddContact()
+        {
+            return View();
+        }
+
+        // POST: Add Contact
+        [HttpPost]
+        [Route("contact/add")]
+        public IActionResult AddContact(ContactInfo contactInfo)
+        {
+            _contactService.AddContact(contactInfo);
+            return RedirectToAction("ShowContacts");
+        }
+    }
+}
+
+
+......................................................................................................................................
+
+
+@model StudentApp.Models.ContactInfo
+
+<h2>Add Contact</h2>
+
+<form method="post" action="/contact/add">
+    <input type="number" name="ContactId" placeholder="Id" required /><br />
+    <input type="text" name="FirstName" placeholder="First Name" /><br />
+    <input type="text" name="LastName" placeholder="Last Name" /><br />
+    <input type="text" name="CompanyName" placeholder="Company" /><br />
+    <input type="email" name="EmailId" placeholder="Email" /><br />
+    <input type="number" name="MobileNo" placeholder="Mobile" /><br />
+    <input type="text" name="Designation" placeholder="Designation" /><br /><br />
+
+    <button type="submit">Add Contact</button>
+</form>
+
+....................................................................................................................................
+
+
+@model List<StudentApp.Models.ContactInfo>
+
+<h2>All Contacts</h2>
+
+<a href="/contact/add">Add New Contact</a>
+
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Company</th>
+        <th>Email</th>
+        <th>Mobile</th>
+        <th>Action</th>
+    </tr>
+
+@foreach (var c in Model)
+{
+    <tr>
+        <td>@c.ContactId</td>
+        <td>@c.FirstName @c.LastName</td>
+        <td>@c.CompanyName</td>
+        <td>@c.EmailId</td>
+        <td>@c.MobileNo</td>
+        <td>
+            <a href="/contact/details/@c.ContactId">View</a>
+        </td>
+    </tr>
+}
+</table>
+
+......................................................................................................................................
+
+
+@model StudentApp.Models.ContactInfo
+
+<h2>Contact Details</h2>
+
+@if (Model != null)
+{
+    <p>Id: @Model.ContactId</p>
+    <p>Name: @Model.FirstName @Model.LastName</p>
+    <p>Company: @Model.CompanyName</p>
+    <p>Email: @Model.EmailId</p>
+    <p>Mobile: @Model.MobileNo</p>
+    <p>Designation: @Model.Designation</p>
+}
+else
+{
+    <p>Contact not found</p>
+}
