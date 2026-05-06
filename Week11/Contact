@@ -1,0 +1,56 @@
+import { Component, OnInit } from '@angular/core';
+import { ContactService } from '../contact.service';
+import { Contact } from '../contact.model';
+
+@Component({
+  selector: 'app-contact',
+  templateUrl: './contact.component.html'
+})
+export class ContactComponent implements OnInit {
+
+  contacts: Contact[] = [];
+  contact: Contact = { name: '', email: '', phone: '' };
+  editMode = false;
+
+  constructor(private service: ContactService) {}
+
+  ngOnInit(): void {
+    this.loadContacts();
+  }
+
+  loadContacts() {
+    this.service.getAll().subscribe(data => {
+      this.contacts = data;
+    });
+  }
+
+  save() {
+    if (this.editMode) {
+      this.service.update(this.contact.id!, this.contact).subscribe(() => {
+        this.loadContacts();
+        this.reset();
+      });
+    } else {
+      this.service.add(this.contact).subscribe(() => {
+        this.loadContacts();
+        this.reset();
+      });
+    }
+  }
+
+  edit(c: Contact) {
+    this.contact = { ...c };
+    this.editMode = true;
+  }
+
+  delete(id: number) {
+    this.service.delete(id).subscribe(() => {
+      this.loadContacts();
+    });
+  }
+
+  reset() {
+    this.contact = { name: '', email: '', phone: '' };
+    this.editMode = false;
+  }
+}
